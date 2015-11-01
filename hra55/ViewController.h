@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *facebookButton;
 
 - (IBAction)submit:(id)sender;
+- (void)sendAnswer;
 
 
 @end

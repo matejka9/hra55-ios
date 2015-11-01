@@ -140,6 +140,7 @@
 - (void) submit:(id)sender {
     NSString *currentAnswer = self.guess.text;
     NSInteger found;
+    [self sendAnswer];
     
     for(found=0;found<self.answers.count;found++) {
         if ([self.solutions[found] isEqualToString:currentAnswer])
@@ -149,6 +150,7 @@
     if (found<self.answers.count) {
         ((UITextField *)self.answers[found]).text=self.solutions[found];
     }
+    
     self.guess.text=@"";
     
     if ([FBSDKAccessToken currentAccessToken]) {
@@ -160,5 +162,28 @@
          }];
     }
 }
+
+- (void)sendAnswer{
+    NSString *post = [NSString stringWithFormat:@"action=%@&q=%@&a=%@",@"answer",self.question.text, self.guess.text];
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    NSString *postLength = [NSString stringWithFormat:@"%lu",(unsigned long)[postData length]];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    
+    [request setURL:[NSURL URLWithString:@"http://hra55-1108.appspot.com/command"]];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
+    
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    
+    if(conn) {
+        NSLog(@"Connection Successful");
+    } else {
+        NSLog(@"Connection could not be made");
+    }
+}
+
 
 @end
