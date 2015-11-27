@@ -10,15 +10,19 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController {
+    NSInteger seconds;
+}
 
 @property NSMutableArray *solutions;
-@property IBOutlet UILabel *question;
+@property IBOutlet UILabel *question, *time, *score;;
 @property IBOutletCollection(UITextField) NSMutableArray *answers;
 @property IBOutlet UITextField *guess;
 @property IBOutlet UITextField *someInfo;
-@property BOOL userFb;
-@property (weak, nonatomic) IBOutlet UIButton *facebookButton;
+@property IBOutlet UIView *loginView;
+@property IBOutlet NSLayoutConstraint *topConstraint;
+
+
 
 - (IBAction)submit:(id)sender;
 - (void)sendAnswer;
