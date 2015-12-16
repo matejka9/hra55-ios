@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import "AppDelegate.h"
 
 @interface ViewController ()
 
@@ -17,29 +18,29 @@
 @implementation ViewController
 
 - (void) setTimer {
-    seconds=60;
-    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(second:) userInfo:nil repeats:YES];
+    seconds=30;
+    timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(second:) userInfo:nil repeats:YES];
 }
 
 - (void)viewDidLoad {
-    
-    NSString *newS = [self normalizedString:@"šiRoké e"];
-    
-    NSLog(@"%@",newS);
     
     NSInteger score = [[NSUserDefaults standardUserDefaults] integerForKey:@"score"];
     self.score.text = [@(score) stringValue];
     
     
-    [super viewDidLoad];
     
+    [super viewDidLoad];
+    self.userFb = NO;
    
     [self loadNextQuestion];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"first"]) {
+        self.guess.placeholder = [NSString stringWithFormat:@"Tap here and answer. E.g. write %@",self.solutions[0]];
+    }
     
 }
 
 - (void)alertView:(UIAlertView *)alertView
-didDismissWithButtonIndex:(NSInteger)buttonIndex {
+        didDismissWithButtonIndex:(NSInteger)buttonIndex {
     [self loadNextQuestion];
 }
 
@@ -51,14 +52,59 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex {
         [aView show];
 
     } else {
-        self.time.text=[NSString stringWithFormat:@"00:%02d",seconds];
+        //self.time.text=[NSString stringWithFormat:@"00:%02d",seconds];
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        CGFloat screenWidth = screenRect.size.width;
+        self.timeConstraint.constant = (1.0 - seconds/30.0)*(screenWidth-40)-30;
     }
     
 }
 
 - (BOOL)prefersStatusBarHidden { return YES; }
 
-
+- (IBAction)loginButtonClicked:(id)sender {
+    if (!self.userFb){
+        FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
+        [login logInWithReadPermissions:@[@"email"] fromViewController:self handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+            if (error) {
+                // Process error
+                NSLog(@"error %@",error);
+            } else if (result.isCancelled) {
+                // Handle cancellations
+                NSLog(@"Cancelled");
+            } else {
+                if ([result.grantedPermissions containsObject:@"email"]) {
+                    // Do work
+                    self.userFb = !self.userFb;
+                    [self fetchUserInfo];
+                    UIImage *btnImage = [UIImage imageNamed:@"logout.png"];
+                    [self.facebookButton setBackgroundImage:btnImage forState:UIControlStateNormal];
+                }
+            }
+        }];
+    }else{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Log out"
+                                                        message:@"Naozaj sa chcete odhlásiť z facebooku?"
+                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Áno" style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {
+                                                                  UIImage *btnImage = [UIImage imageNamed:@"login.png"];
+                                                                  [self.facebookButton setBackgroundImage:btnImage forState:UIControlStateNormal];
+                                                                  [[FBSDKLoginManager new] logOut];
+                                                                  self.userFb = !self.userFb;
+                                                              }];
+        
+        [alert addAction:defaultAction];
+        
+        UIAlertAction* otherAction = [UIAlertAction actionWithTitle:@"Nie" style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {}];
+        
+        [alert addAction:otherAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    
+}
 
 - (void) resetAnswers {
     for (UILabel *l in self.answers) {
@@ -66,13 +112,19 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex {
     }
 }
 
+
 - (void) loadNextQuestion {
+    
+    [self.guess resignFirstResponder];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"v2_nextQuestion" properties:[APP_DELEGATE mpProperties]];
     [self setTimer];
     [self resetAnswers];
     NSInteger questionNumber = [[NSUserDefaults standardUserDefaults] integerForKey:@"lastNumber"]+1;
 
     
-    NSString *url = [NSString stringWithFormat:@"http://hra55-1108.appspot.com/command?action=get_qa&n=%d",questionNumber];
+    NSString *url = [NSString stringWithFormat:@"http://hra55-1108.appspot.com/command?action=get_qa&n=%ld",questionNumber];
     
     [[NSUserDefaults standardUserDefaults] setInteger:questionNumber forKey:@"lastNumber"];
     
@@ -86,12 +138,44 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (error)
         NSLog(@"JSONObjectWithData error: %@", error);
     else {
-        self.question.text = [NSString stringWithFormat:@"%d. %@",questionNumber, d[@"question"]];
+        self.question.text = [NSString stringWithFormat:@"%ld. %@",(long)questionNumber, d[@"question"]];
         
         for (NSArray *answer in d[@"answers"]) {
             NSString *ans = answer[0];
             [self.solutions addObject:ans];
         }
+    }
+}
+
+-(void)fetchUserInfo {
+    
+    if ([FBSDKAccessToken currentAccessToken]) {
+        
+        NSLog(@"Token is available");
+        
+        [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil]
+         startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+             if (!error) {
+                 NSString *uzilovatelovoMeno = result[@"name"];
+                 NSString *uzivateloveId = result[@"id"];
+                 [[NSUserDefaults standardUserDefaults] setObject:uzilovatelovoMeno forKey:@"facebookName"];
+                 [[NSUserDefaults standardUserDefaults] synchronize];
+                 [[NSUserDefaults standardUserDefaults] setObject:uzivateloveId forKey:@"facebookId"];
+                 [[NSUserDefaults standardUserDefaults] synchronize];
+                 
+                 
+                 NSLog(@"Meno z fb:%@", [[NSUserDefaults standardUserDefaults] stringForKey:@"facebookName"]);
+                 NSLog(@"Id z fb:%@", [[NSUserDefaults standardUserDefaults] stringForKey:@"facebookId"]);
+                 
+             }
+             else {
+                 NSLog(@"Error %@",error);
+             }
+         }];
+        
+    } else {
+        
+        NSLog(@"User is not Logged in");
     }
 }
 
@@ -112,6 +196,11 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex {
 
 - (NSString *) normalizedString:(NSString *) str {
     NSDictionary *map = @{
+        @".":@"",
+        @",":@"",
+        @";":@"",
+        @"-":@"",
+        @"+":@"",
         @"á":@"a",
         @"ä":@"a",
         @"č":@"c",
@@ -169,18 +258,57 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex {
         self.score.text= [@(score) stringValue];
         [[NSUserDefaults standardUserDefaults] setInteger:score forKey:@"score"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        NSString *path;
+        
+        NSURL *url;
+        
+        //where you are about to add sound
+        
+        path = [[NSBundle mainBundle] pathForResource:@"bravo1" ofType:@"m4a"];
+        
+        url = [NSURL fileURLWithPath:path];
+        player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:NULL];
+        [player setVolume:1.0];
+        [player play];
+        
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"first"];
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"v2_goodGuess" properties:[APP_DELEGATE mpProperties]];
+    } else {
+        NSString *path;
+        
+        NSURL *url;
+        
+        //where you are about to add sound
+        
+        path = [[NSBundle mainBundle] pathForResource:@"coin-poof-1" ofType:@"m4a"];
+        
+        url = [NSURL fileURLWithPath:path];
+        player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:NULL];
+        [player setVolume:0.2];
+        [player play];
+       
+        UIView *lockView = self.guess;
+        CABasicAnimation *animation =
+        [CABasicAnimation animationWithKeyPath:@"position"];
+        [animation setDuration:0.05];
+        [animation setRepeatCount:4];
+        [animation setAutoreverses:YES];
+        [animation setFromValue:[NSValue valueWithCGPoint:
+                                 CGPointMake([lockView center].x - 20.0f, [lockView center].y)]];
+        [animation setToValue:[NSValue valueWithCGPoint:
+                               CGPointMake([lockView center].x + 20.0f, [lockView center].y)]];
+        [[lockView layer] addAnimation:animation forKey:@"position"];
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"v2_badGuess" properties:[APP_DELEGATE mpProperties]];
     }
     
     self.guess.text=@"";
     
-    if ([FBSDKAccessToken currentAccessToken]) {
-        [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil]
-         startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-             if (!error) {
-                 NSLog(@"fetched user = %@", result);
-             }
-         }];
-    }
+    
 }
 
 - (void)sendAnswer{
@@ -208,26 +336,11 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex {
 #define kOFFSET_FOR_KEYBOARD 80.0
 
 -(void)keyboardWillShow {
-    // Animate the current view out of the way
-    if (self.view.frame.origin.y >= 0)
-    {
-        [self setViewMovedUp:YES];
-    }
-    else if (self.view.frame.origin.y < 0)
-    {
-        [self setViewMovedUp:NO];
-    }
+    [self setViewMovedUp:YES];
 }
 
 -(void)keyboardWillHide {
-    if (self.view.frame.origin.y >= 0)
-    {
-        [self setViewMovedUp:YES];
-    }
-    else if (self.view.frame.origin.y < 0)
-    {
-        [self setViewMovedUp:NO];
-    }
+    [self setViewMovedUp:NO];
 }
 
 -(void)textFieldDidBeginEditing:(UITextField *)sender
@@ -248,7 +361,22 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex {
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3]; // if you want to slide up the view
     
-    //self.topConstraint.constant=-80;
+    if (movedUp) {
+        self.topConstraint.constant=-45;
+        self.question.alpha=0;
+        
+        if ([ [ UIScreen mainScreen ] bounds ].size.height < 500) {
+            self.heightConstraint.constant=25;
+        }
+        self.bottomConstraint.constant=10;
+    }
+    else {
+        self.topConstraint.constant=40;
+        self.question.alpha=0;
+        self.heightConstraint.constant=40;
+        self.bottomConstraint.constant=40;
+        self.question.alpha=1;
+    }
     
     [self.view layoutIfNeeded];
     [UIView commitAnimations];
@@ -281,6 +409,38 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex {
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillHideNotification
                                                   object:nil];
+    [timer invalidate];
+    timer = nil;
+    
+    NSString *fbId = [[NSUserDefaults standardUserDefaults] stringForKey:@"fbid"];
+    NSString *name = [[NSUserDefaults standardUserDefaults] stringForKey:@"fbname"];
+    NSInteger score = [[NSUserDefaults standardUserDefaults] integerForKey:@"score"];
+    if (fbId) {
+        NSString *url = [NSString stringWithFormat:@"http://hra55-1108.appspot.com/command?action=ss&fbid=%@&fbname=%@&score=%ld",fbId,[name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding],score];
+        
+        NSURL *urlRequest = [NSURL URLWithString:url];
+        [NSData dataWithContentsOfURL:urlRequest];
+    }
+    // XXX
+}
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
+- (NSUInteger)supportedInterfaceOrientations
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+#endif
+{
+    // Return a bitmask of supported orientations. If you need more,
+    // use bitwise or (see the commented return).
+    return UIInterfaceOrientationMaskPortrait;
+    // return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+
+- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+    // Return the orientation you'd prefer - this is what it launches to. The
+    // user can still rotate. You don't have to implement this method, in which
+    // case it launches in the current orientation
+    return UIInterfaceOrientationPortrait;
 }
 
 @end

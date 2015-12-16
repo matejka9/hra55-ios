@@ -9,20 +9,25 @@
 #import <UIKit/UIKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import <AVFoundation/AVAudioPlayer.h>
 
 @interface ViewController : UIViewController {
     NSInteger seconds;
+    NSTimer *timer;
+    AVAudioPlayer *player;
 }
 
 @property NSMutableArray *solutions;
 @property IBOutlet UILabel *question, *time, *score;;
-@property IBOutletCollection(UITextField) NSMutableArray *answers;
+@property IBOutletCollection(UILabel) NSMutableArray *answers;
 @property IBOutlet UITextField *guess;
 @property IBOutlet UITextField *someInfo;
 @property IBOutlet UIView *loginView;
-@property IBOutlet NSLayoutConstraint *topConstraint;
+@property IBOutlet NSLayoutConstraint *topConstraint,*timeConstraint,*heightConstraint,*bottomConstraint;
 
 
+@property BOOL userFb;
+@property (weak, nonatomic) IBOutlet UIButton *facebookButton;
 
 - (IBAction)submit:(id)sender;
 - (void)sendAnswer;

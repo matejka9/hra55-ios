@@ -7,7 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4D6972B31C08AB3900FD6C1A /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6972B21C08AB3900FD6C1A /* LoginViewController.m */; };
+		2F5B52D71C10F2480027CFF4 /* crown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F5B52D61C10F2480027CFF4 /* crown@2x.png */; };
+		2F5B52D91C10F5780027CFF4 /* frisbee@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F5B52D81C10F5780027CFF4 /* frisbee@2x.png */; };
+		2F5B52DC1C10FB620027CFF4 /* OpenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F5B52DB1C10FB620027CFF4 /* OpenViewController.m */; };
+		2F5B52DF1C10FDAB0027CFF4 /* LeaderTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F5B52DE1C10FDAB0027CFF4 /* LeaderTableViewController.m */; };
+		2FD0C04A1C15E5D2002C7EDA /* bravo1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 2FD0C0491C15E5D2002C7EDA /* bravo1.m4a */; };
+		2FD0C04E1C15E714002C7EDA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FD0C04D1C15E714002C7EDA /* AVFoundation.framework */; };
+		2FD0C0501C15E914002C7EDA /* coin-poof-1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 2FD0C04F1C15E914002C7EDA /* coin-poof-1.m4a */; };
 		4DE85B771BD28CE8004BC6CE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DE85B761BD28CE8004BC6CE /* AppDelegate.m */; };
 		4DE85B7A1BD28CE8004BC6CE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DE85B791BD28CE8004BC6CE /* ViewController.m */; };
 		4DE85B7D1BD28CE8004BC6CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4DE85B7B1BD28CE8004BC6CE /* Main.storyboard */; };
@@ -26,9 +32,17 @@
 /* Begin PBXFileReference section */
 		1A3962266D725F2BB1810DB1 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C1B4FFD0348C8F71F4612FD /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		2F5B52D61C10F2480027CFF4 /* crown@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "crown@2x.png"; path = "../../../Downloads/crown@2x.png"; sourceTree = "<group>"; };
+		2F5B52D81C10F5780027CFF4 /* frisbee@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "frisbee@2x.png"; path = "../../../Downloads/frisbee@2x.png"; sourceTree = "<group>"; };
+		2F5B52DA1C10FB620027CFF4 /* OpenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenViewController.h; sourceTree = "<group>"; };
+		2F5B52DB1C10FB620027CFF4 /* OpenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenViewController.m; sourceTree = "<group>"; };
+		2F5B52DD1C10FDAB0027CFF4 /* LeaderTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeaderTableViewController.h; sourceTree = "<group>"; };
+		2F5B52DE1C10FDAB0027CFF4 /* LeaderTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeaderTableViewController.m; sourceTree = "<group>"; };
+		2FD0C0491C15E5D2002C7EDA /* bravo1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = bravo1.m4a; sourceTree = "<group>"; };
+		2FD0C04B1C15E705002C7EDA /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		2FD0C04D1C15E714002C7EDA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		2FD0C04F1C15E914002C7EDA /* coin-poof-1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "coin-poof-1.m4a"; path = "../../sharedassets/RubRubRub/inapp/sound/new/cuts/coin-poof-1.m4a"; sourceTree = "<group>"; };
 		33A04046E7A2BC006AAF7351 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		4D6972B11C08AB3900FD6C1A /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
-		4D6972B21C08AB3900FD6C1A /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		4DE85B6F1BD28CE8004BC6CE /* hra55.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hra55.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DE85B731BD28CE8004BC6CE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4DE85B751BD28CE8004BC6CE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -55,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FD0C04E1C15E714002C7EDA /* AVFoundation.framework in Frameworks */,
 				4DE85C991BD29366004BC6CE /* libsqlite3.dylib in Frameworks */,
 				4DE85C9A1BD29366004BC6CE /* libz.1.dylib in Frameworks */,
 				ED78A5CC01C4605D6C6A0C93 /* libPods.a in Frameworks */,
@@ -91,13 +106,13 @@
 		4DE85B711BD28CE8004BC6CE /* hra55 */ = {
 			isa = PBXGroup;
 			children = (
+				2F5B52D61C10F2480027CFF4 /* crown@2x.png */,
 				4DE85B751BD28CE8004BC6CE /* AppDelegate.h */,
 				4DE85B761BD28CE8004BC6CE /* AppDelegate.m */,
-				4D6972B11C08AB3900FD6C1A /* LoginViewController.h */,
-				4D6972B21C08AB3900FD6C1A /* LoginViewController.m */,
 				4DE85B781BD28CE8004BC6CE /* ViewController.h */,
 				4DE85B791BD28CE8004BC6CE /* ViewController.m */,
 				4DE85B7B1BD28CE8004BC6CE /* Main.storyboard */,
+				2F5B52D81C10F5780027CFF4 /* frisbee@2x.png */,
 				4DE85CAD1BD2AFB0004BC6CE /* login.png */,
 				4DE85CAE1BD2AFB0004BC6CE /* logout.png */,
 				4DE85B811BD28CE8004BC6CE /* Assets.xcassets */,
@@ -105,6 +120,10 @@
 				4DE85B861BD28CE8004BC6CE /* Info.plist */,
 				4DE85B7E1BD28CE8004BC6CE /* hra55.xcdatamodeld */,
 				4DE85B721BD28CE8004BC6CE /* Supporting Files */,
+				2F5B52DA1C10FB620027CFF4 /* OpenViewController.h */,
+				2F5B52DB1C10FB620027CFF4 /* OpenViewController.m */,
+				2F5B52DD1C10FDAB0027CFF4 /* LeaderTableViewController.h */,
+				2F5B52DE1C10FDAB0027CFF4 /* LeaderTableViewController.m */,
 			);
 			path = hra55;
 			sourceTree = "<group>";
@@ -112,6 +131,8 @@
 		4DE85B721BD28CE8004BC6CE /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2FD0C04F1C15E914002C7EDA /* coin-poof-1.m4a */,
+				2FD0C0491C15E5D2002C7EDA /* bravo1.m4a */,
 				4DE85B731BD28CE8004BC6CE /* main.m */,
 			);
 			name = "Supporting Files";
@@ -120,6 +141,8 @@
 		588BFD73B8FAF6AB550B3D56 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2FD0C04D1C15E714002C7EDA /* AVFoundation.framework */,
+				2FD0C04B1C15E705002C7EDA /* CoreAudio.framework */,
 				1A3962266D725F2BB1810DB1 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -198,7 +221,11 @@
 				4DE85CAF1BD2AFB0004BC6CE /* login.png in Resources */,
 				4DE85B851BD28CE8004BC6CE /* LaunchScreen.storyboard in Resources */,
 				4DE85CB01BD2AFB0004BC6CE /* logout.png in Resources */,
+				2F5B52D71C10F2480027CFF4 /* crown@2x.png in Resources */,
 				4DE85B821BD28CE8004BC6CE /* Assets.xcassets in Resources */,
+				2FD0C0501C15E914002C7EDA /* coin-poof-1.m4a in Resources */,
+				2FD0C04A1C15E5D2002C7EDA /* bravo1.m4a in Resources */,
+				2F5B52D91C10F5780027CFF4 /* frisbee@2x.png in Resources */,
 				4DE85B7D1BD28CE8004BC6CE /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -258,12 +285,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F5B52DC1C10FB620027CFF4 /* OpenViewController.m in Sources */,
 				4DE85CA31BD2953A004BC6CE /* NetworkAccess.m in Sources */,
 				4DE85C961BD2923B004BC6CE /* main.m in Sources */,
-				4D6972B31C08AB3900FD6C1A /* LoginViewController.m in Sources */,
 				4DE85B7A1BD28CE8004BC6CE /* ViewController.m in Sources */,
 				4DE85B771BD28CE8004BC6CE /* AppDelegate.m in Sources */,
 				4DE85CA01BD294BE004BC6CE /* DBAccess.m in Sources */,
+				2F5B52DF1C10FDAB0027CFF4 /* LeaderTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

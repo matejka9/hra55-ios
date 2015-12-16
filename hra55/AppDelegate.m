@@ -10,6 +10,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
+
 @interface AppDelegate ()
 
 @end
@@ -40,6 +41,9 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [self.window.rootViewController dismissViewControllerAnimated:NO completion:nil];
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"v2_end" properties:[APP_DELEGATE mpProperties]];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -49,6 +53,10 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [FBSDKAppEvents activateApp];
+    // Initialize the library with your
+    [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"v2_start" properties:[APP_DELEGATE mpProperties]];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -135,6 +143,10 @@
             abort();
         }
     }
+}
+
+- (NSDictionary *) mpProperties {
+    return @{};
 }
 
 @end

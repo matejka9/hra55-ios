@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import "Mixpanel.h"
+
+#define APP_DELEGATE ((AppDelegate *) ([UIApplication sharedApplication].delegate))
+#define MIXPANEL_TOKEN @"889f8ea7b0077cf3ef1e0338e9914873"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -20,6 +24,6 @@
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 
-
+- (NSDictionary *) mpProperties;
 @end
 
